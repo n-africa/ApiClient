@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace ApiClient
 {
     class Lyric
     {
+        [JsonPropertyName("lyrics")]
         public string Lyrics { get; set; }
     }
     class Program
@@ -14,15 +16,12 @@ namespace ApiClient
         static async System.Threading.Tasks.Task Main(string[] args)
         {
             var client = new HttpClient();
-            var responseAsStream = await client.GetStreamAsync("https://api.lyrics.ovh/v1/mariah_carey/can't_take_that_away");
+            var responseAsStream = await client.GetStreamAsync("https://api.lyrics.ovh/v1/mariah_carey/cant_take_that_away");
 
-            List<Lyric> theLyrics = await JsonSerializer.DeserializeAsync<List<Lyric>>(responseAsStream);
+            var theLyrics = await JsonSerializer.DeserializeAsync<Lyric>(responseAsStream);
 
-            foreach (var theLyric in theLyrics)
-            {
+            Console.WriteLine(theLyrics.Lyrics);
 
-                Console.WriteLine($"{theLyric.Lyrics}");
-            }
         }
     }
 }
